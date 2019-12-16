@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default class App extends Component {
+    constructor() {
+        super();
+        this.state = {
+            text: '',
+            items: []
+        };
 
-export default App;
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(e) {
+        this.setState({ text: e.target.value });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        if(!this.state.text.length) {
+            return;
+        }
+
+        const newItem = {
+            text: this.state.text,
+            id: Date.now()
+        };
+
+        this.setState(state => ({
+            items: state.items.concat(newItem),
+            text: ''
+        }));
+    }
+
+    render() {
+        return (
+            <div>
+                <h3 className='App-Header'>Todo List</h3>
+                <form onSubmit={this.handleSubmit}>
+                    <label htmlFor='new-todo'>What needs to be done ?</label>
+                    <br />
+                    <br />
+                    <input id='new-todo'
+                           onChange={this.handleChange}
+                           value={this.state.text}
+                    />
+                    <button>
+                        Add #{this.state.items.length + 1}
+                    </button>
+                </form>
+                <ul>
+                    {this.state.items.map(item => (
+                        <li key={item.id}>{ item.text }</li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+}
