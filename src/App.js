@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import TodosInput from './todos-input/todos-input';
+import TodosList from './todos-list/todos-list'
 export default class App extends Component {
     constructor() {
         super();
@@ -26,7 +28,8 @@ export default class App extends Component {
 
         const newItem = {
             text: this.state.text,
-            id: Date.now()
+            id: Date.now(),
+            isChecked: false
         };
 
         this.setState(state => ({
@@ -35,27 +38,35 @@ export default class App extends Component {
         }));
     }
 
+    deleteItem(index) {
+       let clonedItems = [...this.state.items];
+       clonedItems.splice(index, 1);
+       this.setState({
+           items: clonedItems
+       })
+       console.log(this.state);
+    }
+
+    updateCheckbox(index) {
+        let clonedItems = [...this.state.items];
+        clonedItems[index].isChecked = !clonedItems[index].isChecked;
+        this.setState({
+            items: clonedItems
+        })
+    }
+
     render() {
         return (
             <div>
                 <h3 className='App-Header'>Todo List</h3>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor='new-todo'>What needs to be done ?</label>
-                    <br />
-                    <br />
-                    <input id='new-todo'
-                           onChange={this.handleChange}
-                           value={this.state.text}
-                    />
-                    <button>
-                        Add #{this.state.items.length + 1}
-                    </button>
-                </form>
-                <ul>
-                    {this.state.items.map(item => (
-                        <li key={item.id}>{ item.text }</li>
-                    ))}
-                </ul>
+                    <TodosInput changed = {this.handleChange} 
+                    submitted = {this.handleSubmit}
+                    text = {this.state.text}
+                    items = {this.state.items}></TodosInput>
+
+                    <TodosList items = {this.state.items} 
+                                deleted = {(index) => this.deleteItem(index)} 
+                                handleCheckbox = {(index) => this.updateCheckbox(index)}></TodosList>
             </div>
         );
     }
