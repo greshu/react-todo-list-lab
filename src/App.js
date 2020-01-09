@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import TodosInput from './todos-input/todos-input';
-import TodosList from './todos-list/todos-list'
+import TodosInput from './components/todos-input/todos-input';
+import TodosList from './components/todos-list/todos-list'
 export default class App extends Component {
     constructor() {
         super();
