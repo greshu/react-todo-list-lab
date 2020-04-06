@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import './App.css';
-
 import TodosInput from './components/todos-input/todos-input';
 import TodosList from './components/todos-list/todos-list'
-export default class App extends Component {
+import { completed, active, all } from "./store/actions/index";
+
+export class App extends Component {
     constructor() {
         super();
         this.state = {
@@ -40,26 +42,28 @@ export default class App extends Component {
     }
 
     filterList(filterType) {
-        let clonedItems = [...this.state.items]
-        switch (filterType) {
-            case 'All':
-                clonedItems.forEach((item) => { 
-                    item.isShow = true });
-                    break;
-            case 'Completed':
-                clonedItems.forEach((item) => {
-                    item.isChecked ? item.isShow = true : item.isShow = false;
-                });
-                break;
-            case 'Active':
-                clonedItems.forEach((item) => {
-                    !item.isChecked ? item.isShow = true : item.isShow = false;
-                });
+        // let clonedItems = [...this.state.items]
+        // switch (filterType) {
+        //     case 'All':
+        //         clonedItems.forEach((item) => {
+        //             item.isShow = true
+        //         });
+        //         break;
+        //     case 'Completed':
+        //         clonedItems.forEach((item) => {
+        //             item.isChecked ? item.isShow = true : item.isShow = false;
+        //         });
+        //         break;
+        //     case 'Active':
+        //         clonedItems.forEach((item) => {
+        //             !item.isChecked ? item.isShow = true : item.isShow = false;
+        //         });
 
-        }
-        this.setState({
-            items: clonedItems
-        })
+        // }
+        // this.setState({
+        //     items: clonedItems
+        // })
+        console.log(this.props)
     }
 
     deleteItem(index) {
@@ -90,9 +94,26 @@ export default class App extends Component {
 
                 <TodosList items={this.state.items}
                     deleted={(index) => this.deleteItem(index)}
-                    filterList = {(filterType) => this.filterList(filterType)}
+                    filterList={(filterType) => this.filterList(filterType)}
                     handleCheckbox={(index) => this.updateCheckbox(index)}></TodosList>
             </div>
         );
     }
 }
+
+
+const mapStateToProps = state => ({
+    items: state.items
+});
+
+
+const mapDistpatchToProps = {
+    all,
+    completed,
+    active
+};
+
+export default connect(
+    mapStateToProps,
+    mapDistpatchToProps
+)(App);
