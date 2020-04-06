@@ -42,28 +42,17 @@ export class App extends Component {
     }
 
     filterList(filterType) {
-        // let clonedItems = [...this.state.items]
-        // switch (filterType) {
-        //     case 'All':
-        //         clonedItems.forEach((item) => {
-        //             item.isShow = true
-        //         });
-        //         break;
-        //     case 'Completed':
-        //         clonedItems.forEach((item) => {
-        //             item.isChecked ? item.isShow = true : item.isShow = false;
-        //         });
-        //         break;
-        //     case 'Active':
-        //         clonedItems.forEach((item) => {
-        //             !item.isChecked ? item.isShow = true : item.isShow = false;
-        //         });
+        switch (filterType) {
+            case 'All':
+               this.props.all();
+                break;
+            case 'Completed':
+            this.props.completed();
+                break;
+            case 'Active':
+            this.props.active();
 
-        // }
-        // this.setState({
-        //     items: clonedItems
-        // })
-        console.log(this.props)
+        }
     }
 
     deleteItem(index) {
