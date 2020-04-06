@@ -1,23 +1,25 @@
 export const visibilityFilterReducer = (state = {
-    text: '',
     items: []
 }, action) => {
+    var newState = {...state};
+    newState.items = [...state.items];
+    debugger
     switch (action.type) {
-        case 'Completed':
-            state.items.forEach((item) => {
-                item.isChecked ? item.isShow = true : item.isShow = false;
-            });
-            return state
-        case 'Active':
-            state.items.forEach((item) => {
-                !item.isChecked ? item.isShow = true : item.isShow = false;
-            });
-            return state
-        case 'All':
+        // case 'COMPLETED':
+        //     newState.items.forEach((item) => {
+        //         item.isChecked ? item.isShow = true : item.isShow = false;
+        //     });
+        //     return newState
+        // case 'ACTIVE':
+        //     newState.items.forEach((item) => {
+        //         !item.isChecked ? item.isShow = true : item.isShow = false;
+        //     });
+        //     return newState
+        // case 'ALL':
         default:
-            state.items.forEach((item) => {
-                item.isShow = true
-            });
-            return state
+            // newState.items.forEach((item) => {
+            //     item.isShow = true
+            // });
+            return newState
     }
 }

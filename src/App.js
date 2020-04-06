@@ -3,103 +3,87 @@ import { connect } from "react-redux";
 import './App.css';
 import TodosInput from './components/todos-input/todos-input';
 import TodosList from './components/todos-list/todos-list'
-import { completed, active, all } from "./store/actions/index";
+import { completed, active, all, addItem, updateText,
+    updateCheckBox, deleteItem } from "./store/actions/index";
 
-export class App extends Component {
-    constructor() {
-        super();
-        this.state = {
-            text: '',
-            items: []
-        };
+const App = (props) => {
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    const handleChange = (e) => {
+        props.updateText(e.target.value)
     }
 
-    handleChange(e) {
-        this.setState({ text: e.target.value });
-    }
-
-    handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (!this.state.text.length) {
+        if (!props.text.length) {
             return;
         }
-
         const newItem = {
-            text: this.state.text,
+            text: props.text,
             id: Date.now(),
             isChecked: false,
             isShow: true
         };
-
-        this.setState(state => ({
-            items: state.items.concat(newItem),
-            text: ''
-        }));
+        props.addItem(newItem)
     }
 
-    filterList(filterType) {
+    const filterList = (filterType) => {
         switch (filterType) {
             case 'All':
-               this.props.all();
+                props.all();
                 break;
             case 'Completed':
-            this.props.completed();
+                props.completed();
                 break;
             case 'Active':
-            this.props.active();
+                props.active();
 
         }
     }
 
-    deleteItem(index) {
-        let clonedItems = [...this.state.items];
-        clonedItems.splice(index, 1);
-        this.setState({
-            items: clonedItems
-        })
-        console.log(this.state);
+    const deleteItem = (index) => {
+        props.deleteItem(index);
     }
 
-    updateCheckbox(index) {
-        let clonedItems = [...this.state.items];
-        clonedItems[index].isChecked = !clonedItems[index].isChecked;
-        this.setState({
-            items: clonedItems
-        })
+    const updateCheckbox = (index) => {
+        props.updateCheckBox(index)
     }
 
-    render() {
-        return (
-            <div>
-                <h3 className='App-Header'>Todo List</h3>
-                <TodosInput changed={this.handleChange}
-                    submitted={this.handleSubmit}
-                    text={this.state.text}
-                    items={this.state.items}></TodosInput>
 
-                <TodosList items={this.state.items}
-                    deleted={(index) => this.deleteItem(index)}
-                    filterList={(filterType) => this.filterList(filterType)}
-                    handleCheckbox={(index) => this.updateCheckbox(index)}></TodosList>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <h3 className='App-Header'>Todo List</h3>
+            <TodosInput changed={handleChange}
+                submitted={handleSubmit}
+                text={props.text}
+                items={props.items}></TodosInput>
+
+            <TodosList items={props.items}
+                deleted={(index) => deleteItem(index)}
+                filterList={(filterType) => filterList(filterType)}
+                handleCheckbox={(index) => updateCheckbox(index)}></TodosList>
+        </div>
+    );
+
 }
 
 
-const mapStateToProps = state => ({
-    items: state.items
-});
+const mapStateToProps = state => {
+    return ({
+        items: state.todoListUpdate.items,
+        text: state.todoListUpdate.text,
+        // items: state.visibility.items
+    });
+}
 
 
 const mapDistpatchToProps = {
     all,
     completed,
-    active
+    active,
+    addItem,
+    updateText,
+    updateCheckBox,
+    deleteItem
 };
 
 export default connect(
